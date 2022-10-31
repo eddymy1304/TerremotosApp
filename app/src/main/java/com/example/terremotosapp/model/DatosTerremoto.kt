@@ -1,4 +1,4 @@
-package com.example.terremotosapp
+package com.example.terremotosapp.model
 
 class DatosTerremoto {
     fun cargarTerremotos(): MutableList<Terremoto> {

@@ -2,4 +2,5 @@
     <string name="app_name">TerremotosApp</string>
     <string name="icono_de_una_flecha">icono de una flecha</string>
     <string name="empty_view_respuesta">NO HAY NINGÚN ELEMENTO EN LA LISTA</string>
+    <string name="magnitud_formato">%.2f</string>
 </resources>

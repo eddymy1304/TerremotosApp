@@ -1,13 +1,14 @@
-package com.example.terremotosapp
+package com.example.terremotosapp.view.adapter
 
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.terremotosapp.R
 import com.example.terremotosapp.databinding.TerremotoListItemBinding
+import com.example.terremotosapp.model.Terremoto
 
 private val TAG = TerremotoAdapter::class.java.simpleName
 
@@ -22,15 +23,15 @@ class TerremotoAdapter(
     inner class ViewHolder(private val binding: TerremotoListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(terremoto: Terremoto) {
-            binding.magnitud.text = terremoto.magnitud.toString()
+            binding.magnitud.text = context.getString(R.string.magnitud_formato, terremoto.magnitud)
             binding.lugar.text = terremoto.lugar
             binding.root.setOnClickListener {
-                if (::onItemClick.isInitialized)  onItemClick(terremoto)
-                else{
+                if (::onItemClick.isInitialized) onItemClick(terremoto)
+                else {
                     Log.e(TAG, "onItemClick no está inicializado")
                 }
-
             }
+            binding.executePendingBindings()
         }
 
     }

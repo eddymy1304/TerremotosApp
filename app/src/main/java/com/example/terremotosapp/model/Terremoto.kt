@@ -1,4 +1,4 @@
-package com.example.terremotosapp
+package com.example.terremotosapp.model
 
 data class Terremoto(
     val id:String,
