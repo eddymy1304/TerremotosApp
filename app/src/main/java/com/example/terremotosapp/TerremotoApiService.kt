@@ -8,7 +8,7 @@ import retrofit2.http.GET
 interface TerremotoApiService {
   @GET("all_hour.geojson")
   //fun listRepos(/*@Path("user") user: String? CUANDO SE ENVIA DATA*/): Call<List<Repo?>?>? RESPUESTA QUE SE RECIBE DEL SERVIDOR
-  fun obtenerTerremotosUltimaHora(): String
+  suspend fun obtenerTerremotosUltimaHora(): String
 }
 
 private var retrofit = Retrofit.Builder()
