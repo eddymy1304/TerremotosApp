@@ -1,19 +1,24 @@
 package com.example.terremotosapp.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val TAG = MainRepository::class.java.simpleName
 
-class MainRepository {
-    suspend fun buscarTerremoto(): MutableList<Terremoto> {
+class MainRepository(private val database: TerremotoDatabase) {
+    // OBTENEMOS DATOS DE LA BD
+    val terremotoList: LiveData<MutableList<Terremoto>> = database.terremotoDAO.getTerremotos()
+
+    suspend fun buscarTerremoto() {
         return withContext(Dispatchers.IO) {
             val terremotoJsonResponse = service.obtenerTerremotosUltimaHora()
             Log.e(TAG, terremotoJsonResponse.toString())
             val terremotoParseado = parsearLista(terremotoJsonResponse)
             Log.e(TAG, terremotoParseado.toString())
-            terremotoParseado
+            //insertamos a la BD
+            database.terremotoDAO.insertAll(terremotoParseado)
         }
     }
 
