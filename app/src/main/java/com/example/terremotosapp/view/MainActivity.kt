@@ -1,11 +1,16 @@
 package com.example.terremotosapp.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.terremotosapp.DetailActivity
+import com.example.terremotosapp.R
 import com.example.terremotosapp.databinding.ActivityMainBinding
 import com.example.terremotosapp.model.ApiResponseStatus
 import com.example.terremotosapp.model.Terremoto
@@ -45,14 +50,40 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // IMPLEMENTANDO MENU
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+/*    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        when(itemId){
+            R.id.sort_magnitud -> true
+            R.id.sort_time -> false
+        }
+        return
+    }*/
+
     private fun comprobarEmptyView(terremoto: MutableList<Terremoto>?, adapter: TerremotoAdapter) {
         if (terremoto!!.size > 0 && terremoto!!.isNotEmpty()) {
             binding.emptyView.visibility = View.GONE
             adapter.onItemClick = { item ->
-                Toast.makeText(this, item.lugar, Toast.LENGTH_SHORT).show()
+                iniciarDetailActivity(item)
+                //Toast.makeText(this, item.lugar, Toast.LENGTH_SHORT).show()
             }
         } else {
             binding.emptyView.visibility = View.VISIBLE
         }
+    }
+
+    private fun iniciarDetailActivity(terremoto: Terremoto) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.MAGNITUD, terremoto.magnitud)
+        intent.putExtra(DetailActivity.LATITUD, terremoto.latitud)
+        intent.putExtra(DetailActivity.LONGITUD, terremoto.longitud)
+        intent.putExtra(DetailActivity.LUGAR, terremoto.lugar)
+        intent.putExtra(DetailActivity.HORA, terremoto.hora)
+        startActivity(intent)
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sort_time"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_access_time_24"
+        android:title="@string/ordenar_por_fecha"/>
+
+    <item
+        android:id="@+id/sort_magnitud"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_warning_amber_24"
+        android:title="@string/ordenar_por_magnitud"/>
+</menu>
