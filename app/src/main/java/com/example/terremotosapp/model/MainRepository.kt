@@ -8,10 +8,8 @@ import kotlinx.coroutines.withContext
 private val TAG = MainRepository::class.java.simpleName
 
 class MainRepository(private val database: TerremotoDatabase) {
-    // OBTENEMOS DATOS DE LA BD
-    val terremotoList: LiveData<MutableList<Terremoto>> = database.terremotoDAO.getTerremotos()
 
-    suspend fun buscarTerremoto() {
+    suspend fun buscarTerremoto(ordenarPorMagnitud: Boolean): MutableList<Terremoto> {
         return withContext(Dispatchers.IO) {
             val terremotoJsonResponse = service.obtenerTerremotosUltimaHora()
             Log.e(TAG, terremotoJsonResponse.toString())
@@ -19,6 +17,16 @@ class MainRepository(private val database: TerremotoDatabase) {
             Log.e(TAG, terremotoParseado.toString())
             //insertamos a la BD
             database.terremotoDAO.insertAll(terremotoParseado)
+            buscarTerremotoDesdeBD(ordenarPorMagnitud)
+        }
+    }
+
+    suspend fun buscarTerremotoDesdeBD(ordenarPorMagnitud: Boolean): MutableList<Terremoto> {
+        return withContext(Dispatchers.IO) {
+            when (ordenarPorMagnitud) {
+                true -> database.terremotoDAO.getTerremotosporMagnitud()
+                false -> database.terremotoDAO.getTerremotos()
+            }
         }
     }
 

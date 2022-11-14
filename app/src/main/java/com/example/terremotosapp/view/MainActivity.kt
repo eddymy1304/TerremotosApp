@@ -27,21 +27,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val ordenarPor = obtenerOrdenarPor()
+
         viewModel = ViewModelProvider(
             this,
-            MainViewModelFactory(application)
+            MainViewModelFactory(application, ordenarPor)
         )[MainViewModel::class.java]
 
         binding.recyclerTerremoto.layoutManager = LinearLayoutManager(this)
 
         viewModel.terremotoList.observe(this) { terremoto ->
             val adapter = TerremotoAdapter(this, viewModel.terremotoList.value!!)
-            comprobarEmptyView(terremoto, adapter)
             binding.recyclerTerremoto.adapter = adapter
+            comprobarEmptyView(terremoto, adapter)
         }
 
-        viewModel.status.observe(this){
-            when(it!!){
+        viewModel.status.observe(this) {
+            when (it!!) {
                 ApiResponseStatus.DONE -> binding.progressBar.visibility = View.GONE
                 ApiResponseStatus.LOADING -> binding.progressBar.visibility = View.VISIBLE
                 ApiResponseStatus.ERROR -> binding.progressBar.visibility = View.GONE
@@ -50,27 +52,44 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun obtenerOrdenarPor(): Boolean {
+        val preferencias = getSharedPreferences("preferencias",MODE_PRIVATE)
+        return preferencias.getBoolean("ordenar_por", false)
+    }
+
     // IMPLEMENTANDO MENU
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
-/*    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        when(itemId){
-            R.id.sort_magnitud -> true
-            R.id.sort_time -> false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sort_magnitud -> {
+                viewModel.recargarTerremotoListDesdeBD(true, application)
+                guardarOrdenarPor(true)
+            }
+            R.id.sort_time -> {
+                viewModel.recargarTerremotoListDesdeBD(false, application)
+                guardarOrdenarPor(false)
+            }
         }
-        return
-    }*/
+        return super.onOptionsItemSelected(item)
+    }
+
+    // PREFERENCIAS SE USA EN LA ACTIVITY PORQUE SE NECESITA UN CONTEXTO
+    fun guardarOrdenarPor(ordenarPorMagnitud: Boolean) {
+        val preferencias = getSharedPreferences("preferencias", MODE_PRIVATE)
+        val editor = preferencias.edit()
+        editor.putBoolean("ordenar_por", ordenarPorMagnitud)
+        editor.apply()
+    }
 
     private fun comprobarEmptyView(terremoto: MutableList<Terremoto>?, adapter: TerremotoAdapter) {
         if (terremoto!!.size > 0 && terremoto!!.isNotEmpty()) {
             binding.emptyView.visibility = View.GONE
             adapter.onItemClick = { item ->
                 iniciarDetailActivity(item)
-                //Toast.makeText(this, item.lugar, Toast.LENGTH_SHORT).show()
             }
         } else {
             binding.emptyView.visibility = View.VISIBLE

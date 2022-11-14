@@ -12,8 +12,8 @@ interface TerremotoDAO {
     fun insertAll(terremotoList: MutableList<Terremoto>)
 
     @Query("SELECT * FROM terremoto")
-    fun getTerremotos(): LiveData<MutableList<Terremoto>>
+    fun getTerremotos(): MutableList<Terremoto>
 
-    @Query("SELECT * FROM terremoto ORDER BY magnitud ASC")
-    fun getTerremotosporMagnitud(): LiveData<MutableList<Terremoto>>
+    @Query("SELECT * FROM terremoto ORDER BY magnitud DESC")
+    fun getTerremotosporMagnitud(): MutableList<Terremoto>
 }
